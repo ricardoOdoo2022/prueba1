@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- mrp.production inherit form view -->
+    <record id="mrp_production_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.inherit.view.form</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="replace">
+                <field name="product_type"/>
+                <field name="product_available_ids" invisible="1"/>
+                <field name="product_id" context="{'default_type': 'product'}" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('id', 'in', product_available_ids)]" />
+            </xpath>
+            <xpath expr="//field[@name='bom_id']" position="after">
+                <field name="partner_id"/>
+                <field name="commercial_user_id"/>
+                <field name="warranty_expiration_date"/>
+                <field name="warranty_state"/>
+                <field name="partner_guide_available_ids" invisible="1"/>
+                <field name="partner_guide_id" domain="[('id', 'in', partner_guide_available_ids)]"/>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']/tree/field[@name='product_id']" position="replace">
+                <field name="product_id" force_save="1" required="1" attrs="{'readonly': ['|', '|', ('move_lines_count', '&gt;', 0), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_production_workorder_tree_editable_view" model="ir.ui.view">
+        <field name="name">mrp.workorder.view.form</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="technician_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

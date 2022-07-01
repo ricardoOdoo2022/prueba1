@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <menuitem id="mrp.menu_mrp_root"
+        name="Manufacturing"
+        groups="mrp.group_mrp_user,mrp.group_mrp_manager,group_mrp_read_only"
+        web_icon="mrp,static/description/icon.png"
+        sequence="145"/>
+    <!--<menuitem id="mrp.menu_mrp_production_report"
+        name="Manufacturing Orders"
+        groups="mrp.group_mrp_user,mrp.group_mrp_manager,group_mrp_read_only"
+        parent="mrp.menu_mrp_reporting"
+        action="mrp.mrp_production_report"
+        sequence="11"/>-->
+    <menuitem id="mrp.menu_mrp_workorder_todo"
+        name="Work Orders"
+        action="mrp.mrp_workorder_todo"
+        parent="mrp.menu_mrp_manufacturing"
+        groups="mrp.group_mrp_routings,group_mrp_read_only"/>
+</odoo>

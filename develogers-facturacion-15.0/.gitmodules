@@ -1,0 +1,4 @@
+[submodule "DevelogersHub/odoo_marketplace"]
+	path = DevelogersHub/odoo_marketplace
+	url = git@github.com:DevelogersHub/odoo_marketplace.git
+	branch = 15.1

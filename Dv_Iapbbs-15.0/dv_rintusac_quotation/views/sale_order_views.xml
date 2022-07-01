@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.inherit.view.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/form//field[@name='discount']" position="before">
+                <field name="aditional_discount_1"/>
+                <field name="aditional_discount_2"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='discount']" position="before">
+                <field name="aditional_discount_1"/>
+                <field name="aditional_discount_2"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field name="atention"/>
+                <field name="requirement"/>
+                <field name="mrp_production_available_ids" invisible="1"/>
+                <field name="mrp_production_ids" domain="[('id', 'in', mrp_production_available_ids)]" widget="many2many_tags"/>
+                <field name="partner_guide_available_ids" invisible="1"/>
+                <field name="partner_guide_id" domain="[('id', 'in', partner_guide_available_ids)]"/>
+                <field name="sucursal"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="product_notes"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

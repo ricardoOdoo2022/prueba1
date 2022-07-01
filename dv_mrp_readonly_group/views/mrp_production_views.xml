@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="mrp_production_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.inherit.view.form</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="replace">
+                <header>
+                    <field name="confirm_cancel" invisible="1"/>
+                    <field name="show_lock" invisible="1"/>
+                    <button groups="mrp.group_mrp_user" name="button_mark_done" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0), ('move_raw_ids', '!=', [])]}" string="Validate" type="object" class="oe_highlight" confirm="There are no components to consume. Are you still sure you want to continue?" data-hotkey="g"/>
+                    <button groups="mrp.group_mrp_user" name="button_mark_done" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0), ('move_raw_ids', '=', [])]}" string="Validate" type="object" class="oe_highlight" data-hotkey="g"/>
+                    <button groups="mrp.group_mrp_user" name="button_mark_done" attrs="{'invisible': [                         '|',                         ('move_raw_ids', '=', []),                         '&amp;',                         '|',                         ('state', 'not in', ('confirmed', 'progress')),                         ('qty_producing', '!=', 0),                         ('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight" data-hotkey="g"/>
+                    <button groups="mrp.group_mrp_user" name="button_mark_done" attrs="{'invisible': [                         '|',                         ('move_raw_ids', '!=', []),                         '&amp;',                         '|',                         ('state', 'not in', ('confirmed', 'progress')),                         ('qty_producing', '!=', 0),                         ('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight" data-hotkey="g" confirm="There are no components to consume. Are you still sure you want to continue?"/>
+                    <button groups="mrp.group_mrp_user" name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm" type="object" class="oe_highlight" data-hotkey="v"/>
+                    <button groups="mrp.group_mrp_user" name="button_plan" attrs="{'invisible': ['|', '|', ('state', 'not in', ('confirmed', 'progress', 'to_close')), ('workorder_ids', '=', []), ('is_planned', '=', True)]}" type="object" string="Plan" class="oe_highlight" data-hotkey="x"/>
+                    <button groups="mrp.group_mrp_user" name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', ('is_planned', '=', False), ('state', '=', 'cancel')]}" data-hotkey="x"/>
+                    <button groups="mrp.group_mrp_user" name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object" data-hotkey="q"/>
+                    <button groups="mrp.group_mrp_user" name="do_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}" data-hotkey="w"/>
+                    <button groups="mrp.group_mrp_user" name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}" data-hotkey="z"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done"/>
+                    <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="Unlock the manufacturing order to adjust what has been consumed or produced." data-hotkey="l"/>
+                    <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', True)]}" string="Lock" groups="mrp.group_mrp_manager" type="object" help="Lock the manufacturing order to prevent changes to what has been consumed or produced." data-hotkey="l"/>
+                    <field name="show_serial_mass_produce" invisible="1"/>
+                    <button groups="mrp.group_mrp_user" name="action_serial_mass_produce_wizard" attrs="{'invisible': [('show_serial_mass_produce', '=', False)]}" string="Mass Produce" type="object"/>
+                    <button groups="mrp.group_mrp_user" name="action_cancel" type="object" string="Cancel" data-hotkey="z" attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', 'in', ('done', 'cancel')), ('confirm_cancel', '=', True)]}"/>
+                    <button groups="mrp.group_mrp_user" name="action_cancel" type="object" string="Cancel" data-hotkey="z" attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', 'in', ('done', 'cancel')), ('confirm_cancel', '=', False)]}" confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process ?"/>
+                    <button groups="mrp.group_mrp_user" name="button_unbuild" type="object" string="Unbuild" attrs="{'invisible': [('state', '!=', 'done')]}" data-hotkey="shift+v"/>
+                </header>
+            </xpath>
+            <!--
+            <xpath expr="//div[@name='button_box']" position="replace">
+                <div class="oe_button_box" name="button_box">
+                    <button groups="mrp.group_mrp_user" class="oe_stat_button" name="action_view_mrp_production_childs" type="object" icon="fa-wrench" attrs="{'invisible': [('mrp_production_child_count', '=', 0)]}">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="mrp_production_child_count"/>
+                            </span>
+                            <span class="o_stat_text">Child MO</span>
+                        </div>
+                    </button>
+                    <button groups="mrp.group_mrp_user" class="oe_stat_button" name="action_view_mrp_production_sources" type="object" icon="fa-wrench" attrs="{'invisible': [('mrp_production_source_count', '=', 0)]}">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="mrp_production_source_count"/>
+                            </span>
+                            <span class="o_stat_text">Source MO</span>
+                        </div>
+                    </button>
+                    <button groups="mrp.group_mrp_user" class="oe_stat_button" name="action_view_mrp_production_backorders" type="object" icon="fa-wrench" attrs="{'invisible': [('mrp_production_backorder_count', '&lt;', 2)]}">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="mrp_production_backorder_count"/>
+                            </span>
+                            <span class="o_stat_text">Backorders</span>
+                        </div>
+                    </button>
+                    <button groups="mrp.group_mrp_user" class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="scrap_count"/>
+                            </span>
+                            <span class="o_stat_text">Scraps</span>
+                        </div>
+                    </button>
+                    <button type="object" name="action_view_mo_delivery" class="oe_stat_button" icon="fa-truck" groups="base.group_user" attrs="{'invisible': [('delivery_count', '=', 0)]}">
+                        <field name="delivery_count" widget="statinfo" string="Transfers"/>
+                    </button>
+                    <button name="263" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action" states="done" groups="stock.group_production_lot"/>
+                    <button name="425" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
+                </div>
+            </xpath>
+            -->
+        </field>
+    </record>
+</odoo>
